@@ -13,8 +13,11 @@
 					"script": {
 						"id": "4ab534c1-b7e4-421e-90d4-96f52b2411b3",
 						"exec": [
-							"pm.test(\"Create User is Success\", function () {",
+							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Create User is Success\", function () {",
 							"    pm.expect(pm.response.json().message).to.eql(pm.collectionVariables.get(\"testData\").id.toString());",
 							"});"
 						],
@@ -39,7 +42,7 @@
 							"    lastname: \"Yusuf\",",
 							"    email: \"neven@test.com\",",
 							"    password: \"klg-sdet\",",
-							"    phone: 088888888888,",
+							"    phone: \"088888888888\",",
 							"    status: 1,",
 							"};",
 							"",
@@ -58,7 +61,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"id\":1739086,\"username\":\"neven-klg\",\"firstname\":\"Neven\",\"lastname\":\"Yusuf\",\"email\":\"neven@test.com\",\"password\":\"klg-sdet\",\"phone\":88888888888,\"status\":1}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -78,8 +81,11 @@
 					"script": {
 						"id": "85d7685a-1b88-4ca4-81fc-0b07453f5cf9",
 						"exec": [
-							"pm.test(\"Get User is Success\", function () {",
+							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Get User is Success\", function () {",
 							"    pm.expect(pm.response.json().id).to.eql(pm.collectionVariables.get(\"testData\").id);",
 							"    pm.expect(pm.response.json().username).to.eql(pm.collectionVariables.get(\"testData\").username);",
 							"    pm.expect(pm.response.json().email).to.eql(pm.collectionVariables.get(\"testData\").email);",
@@ -123,14 +129,13 @@
 					"script": {
 						"id": "85d7685a-1b88-4ca4-81fc-0b07453f5cf9",
 						"exec": [
-							"pm.test(\"An access token is returned\", () => {",
-							"    pm.expect(pm.response.json()).to.have.property('token')",
-							"    pm.expect(pm.response.json().token).to.be.a('string')",
-							"    // Set the collection-scope \"token\" variable to the token received from the API",
-							"    // This lets us use it in other requests",
-							"    pm.collectionVariables.set('token', pm.response.json().token)",
-							"})",
-							""
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Edit User is Success\", function () {",
+							"    pm.expect(pm.response.json().message).to.eql(pm.collectionVariables.get(\"testData\").id.toString());",
+							"});"
 						],
 						"type": "text/javascript",
 						"packages": {}
@@ -139,8 +144,32 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"packages": {},
-						"type": "text/javascript"
+						"id": "9b6e64d7-0d56-4bed-9775-0f19cc65b29b",
+						"exec": [
+							"let baseUrl = pm.collectionVariables.get(\"baseUrl\");",
+							"let testData = pm.collectionVariables.get(\"testData\");",
+							"",
+							"pm.request.url = baseUrl + \"/user/\" + testData.username;",
+							"",
+							"pm.request.headers.upsert({ key: \"Content-Type\", value: \"application/json\" });",
+							"",
+							"let request = {",
+							"    id: testData.id,",
+							"    username: testData.username,",
+							"    firstname: testData.firstname + \"_edited\",",
+							"    lastname: testData.lastname + \"_edited\",",
+							"    email: testData.email,",
+							"    password: testData.password,",
+							"    phone: testData.phone,",
+							"    status: testData.status,",
+							"};",
+							"",
+							"pm.collectionVariables.set(\"testData\", request);",
+							"",
+							"pm.request.body.update(JSON.stringify(request));"
+						],
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -150,7 +179,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": 1,\n    \"username\": \"user1\",\n    \"firstName\": \"firstname1_edited\",\n    \"lastName\": \"lastname1\",\n    \"email\": \"firstname1@email.com\",\n    \"password\": \"klg-sdet\",\n    \"phone\": \"088888888888\",\n    \"userStatus\": 1\n}",
+					"raw": "",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -163,20 +192,35 @@
 			"response": []
 		}
 	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "a9d53bf6-e7fa-430b-9442-f31d3f5cbea4",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "c14e8ade-c41f-431c-b90e-7a6bc80d15de",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
 	"variable": [
 		{
 			"key": "baseUrl",
 			"value": "",
 			"type": "default"
-		},
-		{
-			"key": "username",
-			"value": "",
-			"type": "default"
-		},
-		{
-			"key": "id",
-			"value": ""
 		},
 		{
 			"key": "testData",
