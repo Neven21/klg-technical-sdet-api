@@ -15,7 +15,7 @@
 						"exec": [
 							"pm.test(\"Create User is Success\", function () {",
 							"    pm.response.to.have.status(200);",
-							"    pm.expect(pm.response.json().message).to.eql(pm.collectionVariables.get(\"id\"));",
+							"    pm.expect(pm.response.json().message).to.eql(pm.collectionVariables.get(\"testData\").id.toString());",
 							"});"
 						],
 						"type": "text/javascript",
@@ -29,9 +29,12 @@
 						"exec": [
 							"pm.request.headers.upsert({ key: \"Content-Type\", value: \"application/json\" });",
 							"",
+							"let timestamp = Date.now();",
+							"let username = \"neven-klg-\" + timestamp.toString();",
+							"",
 							"let request = {",
-							"    id: Date.now(),",
-							"    username: \"neven-klg\",",
+							"    id: timestamp,",
+							"    username: username,",
 							"    firstname: \"Neven\",",
 							"    lastname: \"Yusuf\",",
 							"    email: \"neven@test.com\",",
@@ -40,8 +43,7 @@
 							"    status: 1,",
 							"};",
 							"",
-							"console.log(request.id)",
-							"pm.collectionVariables.set(\"id\", request.id);",
+							"pm.collectionVariables.set(\"testData\", request);",
 							"",
 							"pm.request.body.update(JSON.stringify(request));"
 						],
@@ -76,14 +78,28 @@
 					"script": {
 						"id": "85d7685a-1b88-4ca4-81fc-0b07453f5cf9",
 						"exec": [
-							"pm.test(\"An access token is returned\", () => {",
-							"    pm.expect(pm.response.json()).to.have.property('token')",
-							"    pm.expect(pm.response.json().token).to.be.a('string')",
-							"    // Set the collection-scope \"token\" variable to the token received from the API",
-							"    // This lets us use it in other requests",
-							"    pm.collectionVariables.set('token', pm.response.json().token)",
-							"})",
-							""
+							"pm.test(\"Get User is Success\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.expect(pm.response.json().id).to.eql(pm.collectionVariables.get(\"testData\").id);",
+							"    pm.expect(pm.response.json().username).to.eql(pm.collectionVariables.get(\"testData\").username);",
+							"    pm.expect(pm.response.json().email).to.eql(pm.collectionVariables.get(\"testData\").email);",
+							"    pm.expect(pm.response.json().password).to.eql(pm.collectionVariables.get(\"testData\").password);",
+							"    pm.expect(pm.response.json().phone).to.eql(pm.collectionVariables.get(\"testData\").phone.toString());",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a001c53b-ba7c-4581-a2f3-091e77908392",
+						"exec": [
+							"let baseUrl = pm.collectionVariables.get(\"baseUrl\");",
+							"let username = pm.collectionVariables.get(\"testData\").username;",
+							"",
+							"pm.request.url = baseUrl + \"/user/\" + username;"
 						],
 						"type": "text/javascript",
 						"packages": {}
