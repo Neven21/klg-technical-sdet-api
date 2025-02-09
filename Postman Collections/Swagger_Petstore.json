@@ -1,0 +1,278 @@
+{
+	"info": {
+		"_postman_id": "b32660e0-79de-47e6-9473-2120f29d476f",
+		"name": "Swagger Petstore",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "4ab534c1-b7e4-421e-90d4-96f52b2411b3",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Create User is Success\", function () {",
+							"    pm.expect(pm.response.json().message).to.eql(pm.collectionVariables.get(\"testData\").id.toString());",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "ae039a2e-f380-492e-9a15-7589f89ab502",
+						"exec": [
+							"pm.request.headers.upsert({ key: \"Content-Type\", value: \"application/json\" });",
+							"",
+							"let timestamp = Date.now();",
+							"let username = \"neven-klg-\" + timestamp.toString();",
+							"",
+							"let request = {",
+							"    id: timestamp,",
+							"    username: username,",
+							"    firstname: \"Neven\",",
+							"    lastname: \"Yusuf\",",
+							"    email: \"neven@test.com\",",
+							"    password: \"klg-sdet\",",
+							"    phone: \"088888888888\",",
+							"    status: 1,",
+							"};",
+							"",
+							"pm.collectionVariables.set(\"testData\", request);",
+							"",
+							"pm.request.body.update(JSON.stringify(request));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "28f726ef-ae35-4f18-bb92-67a5559428dc",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseUrl}}/user",
+				"description": "This returns a `token` that you can use to retrieve information later on.\n\nWe have included a test to confirm if a token is returned. We have also added test scripts to copy the token to the `token` collection variable. This makes it easy for us to reuse this token in other requests in the collection."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Created User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "85d7685a-1b88-4ca4-81fc-0b07453f5cf9",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Get Created User is Success\", function () {",
+							"    pm.expect(pm.response.json().id).to.eql(pm.collectionVariables.get(\"testData\").id);",
+							"    pm.expect(pm.response.json().username).to.eql(pm.collectionVariables.get(\"testData\").username);",
+							"    pm.expect(pm.response.json().email).to.eql(pm.collectionVariables.get(\"testData\").email);",
+							"    pm.expect(pm.response.json().password).to.eql(pm.collectionVariables.get(\"testData\").password);",
+							"    pm.expect(pm.response.json().phone).to.eql(pm.collectionVariables.get(\"testData\").phone.toString());",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a001c53b-ba7c-4581-a2f3-091e77908392",
+						"exec": [
+							"let baseUrl = pm.collectionVariables.get(\"baseUrl\");",
+							"let username = pm.collectionVariables.get(\"testData\").username;",
+							"",
+							"pm.request.url = baseUrl + \"/user/\" + username;"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "ad46203a-5d63-4eaa-90ed-075bc992b15f",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/user/{{username}}",
+				"description": "This returns a `token` that you can use to retrieve information later on.\n\nWe have included a test to confirm if a token is returned. We have also added test scripts to copy the token to the `token` collection variable. This makes it easy for us to reuse this token in other requests in the collection."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Edited User Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "85d7685a-1b88-4ca4-81fc-0b07453f5cf9",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Get Edited User is Success\", function () {",
+							"    pm.expect(pm.response.json().id).to.eql(pm.collectionVariables.get(\"testData\").id);",
+							"    pm.expect(pm.response.json().username).to.eql(pm.collectionVariables.get(\"testData\").username);",
+							"    pm.expect(pm.response.json().email).to.eql(pm.collectionVariables.get(\"testData\").email);",
+							"    pm.expect(pm.response.json().password).to.eql(pm.collectionVariables.get(\"testData\").password);",
+							"    pm.expect(pm.response.json().phone).to.eql(pm.collectionVariables.get(\"testData\").phone.toString());",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a001c53b-ba7c-4581-a2f3-091e77908392",
+						"exec": [
+							"let baseUrl = pm.collectionVariables.get(\"baseUrl\");",
+							"let username = pm.collectionVariables.get(\"testData\").username;",
+							"",
+							"pm.request.url = baseUrl + \"/user/\" + username;"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "91601af1-83cd-418b-ac72-98fbef4e1c55",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/user/{{username}}",
+				"description": "This returns a `token` that you can use to retrieve information later on.\n\nWe have included a test to confirm if a token is returned. We have also added test scripts to copy the token to the `token` collection variable. This makes it easy for us to reuse this token in other requests in the collection."
+			},
+			"response": []
+		},
+		{
+			"name": "Edit User",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "85d7685a-1b88-4ca4-81fc-0b07453f5cf9",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Edit User is Success\", function () {",
+							"    pm.expect(pm.response.json().message).to.eql(pm.collectionVariables.get(\"testData\").id.toString());",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "9b6e64d7-0d56-4bed-9775-0f19cc65b29b",
+						"exec": [
+							"let baseUrl = pm.collectionVariables.get(\"baseUrl\");",
+							"let testData = pm.collectionVariables.get(\"testData\");",
+							"",
+							"pm.request.url = baseUrl + \"/user/\" + testData.username;",
+							"",
+							"pm.request.headers.upsert({ key: \"Content-Type\", value: \"application/json\" });",
+							"",
+							"let request = {",
+							"    id: testData.id,",
+							"    username: testData.username,",
+							"    firstname: testData.firstname + \"_edited\",",
+							"    lastname: testData.lastname + \"_edited\",",
+							"    email: testData.email + \"_edited\",",
+							"    password: testData.password + \"_edited\",",
+							"    phone: testData.phone + \"_edited\",",
+							"    status: testData.status,",
+							"};",
+							"",
+							"pm.collectionVariables.set(\"testData\", request);",
+							"",
+							"pm.request.body.update(JSON.stringify(request));"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "3303c5a2-60b7-451c-a700-6b1c6253a395",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": "{{baseUrl}}/user/{{username}}",
+				"description": "This returns a `token` that you can use to retrieve information later on.\n\nWe have included a test to confirm if a token is returned. We have also added test scripts to copy the token to the `token` collection variable. This makes it easy for us to reuse this token in other requests in the collection."
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "a9d53bf6-e7fa-430b-9442-f31d3f5cbea4",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "c14e8ade-c41f-431c-b90e-7a6bc80d15de",
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "testData",
+			"value": ""
+		}
+	]
+}
