@@ -13,8 +13,9 @@
 					"script": {
 						"id": "4ab534c1-b7e4-421e-90d4-96f52b2411b3",
 						"exec": [
-							"pm.test(\"Status code is 200\", function () {",
+							"pm.test(\"Create User is Success\", function () {",
 							"    pm.response.to.have.status(200);",
+							"    pm.expect(pm.response.json().message).to.eql(pm.collectionVariables.get(\"id\"));",
 							"});"
 						],
 						"type": "text/javascript",
@@ -24,8 +25,28 @@
 				{
 					"listen": "prerequest",
 					"script": {
-						"packages": {},
-						"type": "text/javascript"
+						"id": "ae039a2e-f380-492e-9a15-7589f89ab502",
+						"exec": [
+							"pm.request.headers.upsert({ key: \"Content-Type\", value: \"application/json\" });",
+							"",
+							"let request = {",
+							"    id: Date.now(),",
+							"    username: \"neven-klg\",",
+							"    firstname: \"Neven\",",
+							"    lastname: \"Yusuf\",",
+							"    email: \"neven@test.com\",",
+							"    password: \"klg-sdet\",",
+							"    phone: 088888888888,",
+							"    status: 1,",
+							"};",
+							"",
+							"console.log(request.id)",
+							"pm.collectionVariables.set(\"id\", request.id);",
+							"",
+							"pm.request.body.update(JSON.stringify(request));"
+						],
+						"type": "text/javascript",
+						"packages": {}
 					}
 				}
 			],
@@ -35,7 +56,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"id\": 1,\n    \"username\": \"user1\",\n    \"firstName\": \"firstname1\",\n    \"lastName\": \"lastname1\",\n    \"email\": \"firstname1@email.com\",\n    \"password\": \"klg-sdet\",\n    \"phone\": \"088888888888\",\n    \"userStatus\": 1\n}",
+					"raw": "{\"id\":1739086,\"username\":\"neven-klg\",\"firstname\":\"Neven\",\"lastname\":\"Yusuf\",\"email\":\"neven@test.com\",\"password\":\"klg-sdet\",\"phone\":88888888888,\"status\":1}",
 					"options": {
 						"raw": {
 							"language": "json"
