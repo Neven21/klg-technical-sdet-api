@@ -74,7 +74,7 @@
 			"response": []
 		},
 		{
-			"name": "Get User",
+			"name": "Get Created User",
 			"event": [
 				{
 					"listen": "test",
@@ -85,7 +85,7 @@
 							"    pm.response.to.have.status(200);",
 							"});",
 							"",
-							"pm.test(\"Get User is Success\", function () {",
+							"pm.test(\"Get Created User is Success\", function () {",
 							"    pm.expect(pm.response.json().id).to.eql(pm.collectionVariables.get(\"testData\").id);",
 							"    pm.expect(pm.response.json().username).to.eql(pm.collectionVariables.get(\"testData\").username);",
 							"    pm.expect(pm.response.json().email).to.eql(pm.collectionVariables.get(\"testData\").email);",
@@ -113,6 +113,54 @@
 				}
 			],
 			"id": "ad46203a-5d63-4eaa-90ed-075bc992b15f",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{baseUrl}}/user/{{username}}",
+				"description": "This returns a `token` that you can use to retrieve information later on.\n\nWe have included a test to confirm if a token is returned. We have also added test scripts to copy the token to the `token` collection variable. This makes it easy for us to reuse this token in other requests in the collection."
+			},
+			"response": []
+		},
+		{
+			"name": "Get Edited User Copy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "85d7685a-1b88-4ca4-81fc-0b07453f5cf9",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"pm.test(\"Get Edited User is Success\", function () {",
+							"    pm.expect(pm.response.json().id).to.eql(pm.collectionVariables.get(\"testData\").id);",
+							"    pm.expect(pm.response.json().username).to.eql(pm.collectionVariables.get(\"testData\").username);",
+							"    pm.expect(pm.response.json().email).to.eql(pm.collectionVariables.get(\"testData\").email);",
+							"    pm.expect(pm.response.json().password).to.eql(pm.collectionVariables.get(\"testData\").password);",
+							"    pm.expect(pm.response.json().phone).to.eql(pm.collectionVariables.get(\"testData\").phone.toString());",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "a001c53b-ba7c-4581-a2f3-091e77908392",
+						"exec": [
+							"let baseUrl = pm.collectionVariables.get(\"baseUrl\");",
+							"let username = pm.collectionVariables.get(\"testData\").username;",
+							"",
+							"pm.request.url = baseUrl + \"/user/\" + username;"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"id": "91601af1-83cd-418b-ac72-98fbef4e1c55",
 			"request": {
 				"method": "GET",
 				"header": [],
