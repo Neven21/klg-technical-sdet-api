@@ -136,6 +136,10 @@
 			"key": "username",
 			"value": "",
 			"type": "default"
+		},
+		{
+			"key": "id",
+			"value": ""
 		}
 	]
 }
